@@ -1,0 +1,13 @@
+{
+  "name": "ai-testing-evals",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testing and evaluating LLM applications with Promptfoo",
+  "scripts": {
+    "eval": "promptfoo eval",
+    "view": "promptfoo view"
+  },
+  "devDependencies": {
+    "promptfoo": "^0.125.1"
+  }
+}

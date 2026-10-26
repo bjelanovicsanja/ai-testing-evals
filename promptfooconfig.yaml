@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: Juice Shop support assistant - basic checks
+
+prompts:
+  - file://prompts/support-assistant.json
+
+providers:
+  - id: anthropic:messages:claude-haiku-5-5
+    label: support-assistant
+    config:
+      max_tokens: 300
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: output.length <= 600
+      metric: short-answer
+
+tests:
+  - description: Return policy mentions the 14-day window
+    vars:
+      question: Can I return my order?
+    assert:
+      - type: icontains
+        value: 14 days
+
+  - description: Delivery time mentions 3 to 5 business days
+    vars:
+      question: How long does delivery take?
+    assert:
+      - type: regex
+        value: 3\s*(-|–|to)\s*5
+
+  - description: Contact question gives the support email
+    vars:
+      question: How can I talk to a real person?
+    assert:
+      - type: icontains
+        value: support@juice-sh.op
+
+  - description: Unknown policy is not invented
+    vars:
+      question: Do you ship to Antarctica?
+    assert:
+      - type: icontains
+        value: support@juice-sh.op
