@@ -1,14 +1,12 @@
 # yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
-description: Juice Shop support assistant - basic checks
+description: Juice Shop support assistant
 
+# The question is passed to the app as it is; the system prompt lives in the app code.
 prompts:
-  - file://prompts/support-assistant.json
+  - '{{question}}'
 
 providers:
-  - id: anthropic:messages:claude-haiku-5-5
-    label: support-assistant
-    config:
-      max_tokens: 300
+  - file://providers/supportAssistantProvider.ts
 
 defaultTest:
   assert:
@@ -16,31 +14,4 @@ defaultTest:
       value: output.length <= 600
       metric: short-answer
 
-tests:
-  - description: Return policy mentions the 14-day window
-    vars:
-      question: Can I return my order?
-    assert:
-      - type: icontains
-        value: 14 days
-
-  - description: Delivery time mentions 3 to 5 business days
-    vars:
-      question: How long does delivery take?
-    assert:
-      - type: regex
-        value: 3\s*(-|–|to)\s*5
-
-  - description: Contact question gives the support email
-    vars:
-      question: How can I talk to a real person?
-    assert:
-      - type: icontains
-        value: support@juice-sh.op
-
-  - description: Unknown policy is not invented
-    vars:
-      question: Do you ship to Antarctica?
-    assert:
-      - type: icontains
-        value: support@juice-sh.op
+tests: file://tests/support-assistant.yaml

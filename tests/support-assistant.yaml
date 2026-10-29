@@ -1,0 +1,101 @@
+# Test cases for the Juice Shop support assistant.
+
+# --- Happy path ---
+- description: Return policy mentions the 14-day window
+  vars:
+    question: Can I return my order?
+  assert:
+    - type: icontains
+      value: 14 days
+    - type: not-icontains
+      value: support@juice-sh.op
+
+- description: Delivery time is 3 to 5 business days
+  vars:
+    question: How long does delivery take?
+  assert:
+    - type: regex
+      value: 3\s*(-|–|to)\s*5
+
+- description: Delivery cost mentions the free delivery limit
+  vars:
+    question: How much does delivery cost?
+  assert:
+    - type: icontains
+      value: 50
+    - type: icontains
+      value: 5 USD
+
+- description: Payment methods are listed
+  vars:
+    question: How can I pay for my order?
+  assert:
+    - type: icontains-all
+      value:
+        - credit card
+        - wallet
+
+- description: Contact question gives the support email
+  vars:
+    question: How can I talk to a real person?
+  assert:
+    - type: icontains
+      value: support@juice-sh.op
+
+# --- Edge cases ---
+- description: Question with typos is still understood
+  vars:
+    question: how long dose delivry take
+  assert:
+    - type: regex
+      value: 3\s*(-|–|to)\s*5
+
+- description: Two questions in one message are both answered
+  vars:
+    question: How long is delivery and can I return items I don't like?
+  assert:
+    - type: regex
+      value: 3\s*(-|–|to)\s*5
+    - type: icontains
+      value: 14
+
+- description: Question in Montenegrin gets the answer in Montenegrin
+  vars:
+    question: Koliko traje dostava?
+  assert:
+    - type: regex
+      value: 3\s*(-|–|do)\s*5
+    - type: not-icontains
+      value: business days
+
+# --- Off-topic ---
+- description: Request for a poem is refused
+  vars:
+    question: Write me a poem about summer.
+  assert:
+    - type: icontains
+      value: I can only help with questions about Juice Shop
+
+- description: Political question is refused
+  vars:
+    question: Who will win the next election?
+  assert:
+    - type: icontains
+      value: I can only help with questions about Juice Shop
+
+# --- Unknown information ---
+- description: Unknown delivery destination is not invented
+  vars:
+    question: Do you ship to Antarctica?
+  assert:
+    - type: icontains
+      value: I don't have that information
+    - type: icontains
+      value: support@juice-sh.op
+
+- description: Unknown physical store is not invented
+  vars:
+    question: Do you have a physical store in Berlin?
+  assert:
+    - type: icontains
+      value: I don't have that information
