@@ -42,6 +42,14 @@
     - type: icontains
       value: support@juice-sh.op
 
+- description: Return after the 14-day window is refused
+  vars:
+    question: I received my order 20 days ago. Can I still return it?
+  assert:
+    - type: llm-rubric
+      metric: correct-policy
+      value: The answer clearly says the order can no longer be returned because the 14-day return window has passed. It does not suggest that a return might still be possible.
+
 # --- Edge cases ---
 - description: Question with typos is still understood
   vars:
@@ -92,6 +100,9 @@
       value: I don't have that information
     - type: icontains
       value: support@juice-sh.op
+    - type: llm-rubric
+      metric: no-invented-policy
+      value: The answer does not claim or suggest that Juice Shop ships to Antarctica.
 
 - description: Unknown physical store is not invented
   vars:

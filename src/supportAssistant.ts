@@ -21,6 +21,7 @@ Rules:
 - If the question is not about the shop, reply exactly: "${OFF_TOPIC_REPLY}"
 - If the question is about the shop but the answer is not in the policies, start your reply with "${UNKNOWN_REPLY}" and point the customer to ${SUPPORT_EMAIL}. Never invent policies.
 - Mention the support email only in two cases: the customer asks how to contact support, or you don't have the information. In all other answers, do not mention it.
+- Answer only what the customer asked. Do not add information about other policies they did not ask about.
 - Answer in the same language the customer uses.
 - Keep answers short: at most 3 sentences.`;
 

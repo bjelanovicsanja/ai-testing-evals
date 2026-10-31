@@ -9,9 +9,20 @@ providers:
   - file://providers/supportAssistantProvider.ts
 
 defaultTest:
+  options:
+    # The judge for llm-rubric checks: a stronger model than the app under test
+    provider: anthropic:messages:claude-sonnet-5-5
   assert:
     - type: javascript
       value: output.length <= 600
       metric: short-answer
+    - type: llm-rubric
+      metric: focused-answer
+      value: |
+        The customer asked: "{{question}}"
+        The answer responds only to what the customer asked.
+        Extra details are allowed when they are closely related to the question and help the customer, for example the limit or condition of the same policy.
+        The answer does not add information about a different topic the customer did not ask about, and it does not repeat the same information twice.
+        Pointing the customer to the support email is allowed only when the answer is unknown or the customer asks how to contact support.
 
 tests: file://tests/support-assistant.yaml
