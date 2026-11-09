@@ -16,6 +16,14 @@ defaultTest:
     - type: javascript
       value: output.length <= 600
       metric: short-answer
+    # Measured answers cost about 0.0001 USD and take about 1-1.5 seconds.
+    # Limits are about 2x the measured values, so normal variation still passes.
+    - type: cost
+      threshold: 0.0002
+      metric: cost
+    - type: latency
+      threshold: 3000
+      metric: latency
     - type: llm-rubric
       metric: focused-answer
       value: |

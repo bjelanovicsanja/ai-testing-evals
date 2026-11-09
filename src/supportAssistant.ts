@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-const MODEL = 'claude-haiku-5-5';
+export const MODEL = 'claude-haiku-5-5';
 const MAX_TOKENS = 300;
 
 export const SUPPORT_EMAIL = 'support@juice-sh.op';
