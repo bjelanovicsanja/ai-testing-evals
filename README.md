@@ -16,12 +16,14 @@ The test dataset covers:
 | Edge cases | Typos, two questions in one message, a question in Montenegrin |
 | Off-topic | Requests unrelated to the shop are politely refused |
 | Unknown information | The assistant admits it doesn't know instead of inventing a policy |
+| Hallucination | Wrong facts in the question are corrected, and missing details (express delivery, phone number) are not invented |
 
 Every test case also checks these metrics:
 
 | Metric | What is checked |
 |---|---|
 | short-answer | The answer is at most 600 characters long |
+| grounded-answer | An LLM judge checks that every fact in the answer comes from the shop policies |
 | focused-answer | An LLM judge checks that the answer covers only what the customer asked |
 | cost | One answer costs at most 0.0002 USD |
 | latency | The answer arrives within 3 seconds |
@@ -29,7 +31,7 @@ Every test case also checks these metrics:
 ## Project structure
 
 ```
-├── src/          # The app under test: the support assistant
+├── src/          # The app under test: the support assistant and its policies (policies.md)
 ├── providers/    # Connects Promptfoo to the app
 ├── tests/        # Test dataset with assertions
 └── promptfooconfig.yaml
@@ -49,7 +51,7 @@ npm run view            # open the results in the browser
 - [x] Promptfoo setup with deterministic checks
 - [x] Assistant in TypeScript and a test dataset (happy path, edge cases, off-topic, unknown information)
 - [x] LLM-as-a-judge and custom metrics (cost and latency)
-- [ ] Hallucination and response quality checks
+- [x] Hallucination and response quality checks
 - [ ] RAG testing
 - [ ] Agent and tool-calling testing
 - [ ] Red teaming

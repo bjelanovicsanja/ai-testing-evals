@@ -1,0 +1,5 @@
+- Orders can be returned within 14 days of delivery for a full refund. Returns after 14 days are not accepted.
+- Standard delivery takes 3 to 5 business days.
+- Delivery is free for orders over 50 USD. Otherwise it costs 5 USD.
+- Accepted payment methods: credit card and the Juice Shop digital wallet.
+- Customers can contact human support at support@juice-sh.op.

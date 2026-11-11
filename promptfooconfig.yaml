@@ -9,6 +9,9 @@ providers:
   - file://providers/supportAssistantProvider.ts
 
 defaultTest:
+  vars:
+    # The same policies the app uses, so the judge knows what is true
+    policies: file://src/policies.md
   options:
     # The judge for llm-rubric checks: a stronger model than the app under test
     provider: anthropic:messages:claude-sonnet-5-5
@@ -25,12 +28,22 @@ defaultTest:
       threshold: 3000
       metric: latency
     - type: llm-rubric
+      metric: grounded-answer
+      value: |
+        These are the only facts known about the shop:
+        {{policies}}
+
+        Every fact the answer states about the shop must come from the facts above. This includes prices, delivery times, limits, payment methods, contacts, services and locations.
+        The answer fails if it states any other fact about the shop, even if it sounds likely. For example, saying that a service does not exist, when the facts above do not say so, is an invented fact.
+        Saying that the information is not available, pointing to the support email, or refusing a question that is not about the shop is allowed.
+    - type: llm-rubric
       metric: focused-answer
       value: |
         The customer asked: "{{question}}"
         The answer responds only to what the customer asked.
         Extra details are allowed when they are closely related to the question and help the customer, for example the limit or condition of the same policy.
         The answer does not add information about a different topic the customer did not ask about, and it does not repeat the same information twice.
+        A rule and its direct consequence count as one detail, not a repetition. For example, "returns are accepted within 14 days" followed by "returns after 14 days are not accepted" is allowed. Saying "within 14 days" twice in different words is a repetition.
         Pointing the customer to the support email is allowed only when the answer is unknown or the customer asks how to contact support.
 
 tests: file://tests/support-assistant.yaml
